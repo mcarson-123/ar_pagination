@@ -15,11 +15,19 @@
 # The `.rspec` file also contains a few flags that are not defaults but that
 # users commonly want.
 #
+# require 'rspec/rails'
+
+# # Configure Rails Environment
+ENV["RAILS_ENV"] = "test"
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 
+require File.expand_path("../../spec/dummy/config/environment.rb",  __FILE__)
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../spec/dummy/db/migrate", __FILE__)]
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # config.use_transactional_fixtures = true
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

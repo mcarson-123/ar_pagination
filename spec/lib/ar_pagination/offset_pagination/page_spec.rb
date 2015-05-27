@@ -1,36 +1,30 @@
-require "spec_helper"
+require "rails_helper"
 require "ar_pagination/offset_pagination/page"
 require "active_support/core_ext/array/wrap"
 require "active_support/core_ext/string"
 
-describe "Page" do
-  let(:test_model1) { double("TestModel") }
-  let(:offset) { double(:offset, limit: [test_model1]) }
-  let(:scope) { double(:scope, offset: offset) }
+describe "ArPagination::OffsetPagination::Page" do
+  let!(:madeline) { Foo.create(name: 'Madeline', age: 125) }
+  let!(:youngin) { Foo.create(name: "youngin'", age: 90) }
+  let(:scope) { Foo.all }
 
   describe "#data" do
 
     it 'offsets the data' do
-      expect(scope).to receive(:offset).with(2)
-
-      page = ArPagination::OffsetPagination::Page.new(scope, {offset: 2})
-      page.data
+      page = ArPagination::OffsetPagination::Page.new(scope, {offset: 1})
+      expect(page.data).to contain_exactly(youngin)
     end
 
     it 'limits the data' do
-      expect(offset).to receive(:limit).with(10)
-
-      page = ArPagination::OffsetPagination::Page.new(scope, {count: 10})
-      page.data
+      page = ArPagination::OffsetPagination::Page.new(scope, {count: 1})
+      expect(page.data).to contain_exactly(madeline)
     end
 
     it 'orders the data' do
-      allow(scope).to receive(:order).and_return(scope)
-
-      expect(scope).to receive(:order).with({name: :asc})
-
-      page = ArPagination::OffsetPagination::Page.new(scope, {sort: "+name"})
-      page.data
+      page = ArPagination::OffsetPagination::Page.new(scope, {sort: "-name"})
+      expect(page.data.size).to eql(2)
+      expect(page.data.first).to eql(youngin)
+      expect(page.data.last).to eql(madeline)
     end
   end
 
