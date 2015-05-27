@@ -1,4 +1,4 @@
-module Pagination
+module ArPagination::CursorPagination
   class Query
 
     # @param [ActiveRecord::Relation] scope inwhich to find current page

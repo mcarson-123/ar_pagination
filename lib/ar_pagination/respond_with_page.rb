@@ -1,4 +1,4 @@
-module RespondWithPage
+module ArPagination::RespondWithPage
   extend ActiveSupport::Concern
 
   private

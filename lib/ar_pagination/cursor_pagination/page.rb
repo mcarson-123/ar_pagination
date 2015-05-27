@@ -1,4 +1,4 @@
-module Pagination
+module ArPagination::CursorPagination
   class Page
 
     attr_reader :count

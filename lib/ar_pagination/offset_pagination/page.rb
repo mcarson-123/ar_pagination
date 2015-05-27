@@ -1,4 +1,4 @@
-module OffsetPagination
+module ArPagination::OffsetPagination
   class Page
 
     def initialize(scope, options = {})
