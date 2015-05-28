@@ -7,45 +7,33 @@ module ArPagination::CursorPagination
     # param [Array] window in current window
     # param [Fixnum] cursor previous cursor
     # option [Fixnum] count
-    def initialize(window, cursor, count: 20)
-      @window = window.to_a
+    def initialize(window, cursor, cursor_key, count: 20)
+      @window = window
       @cursor = cursor
+      @cursor_key = cursor_key
       @count = count
-
-      @prev_element = @window.shift if @window.first.try(:id) == @cursor
-      @next_element = @window.pop while @window.length > @count
-      @first = -1
     end
 
     def data
-      # consume last element if at the end of the sequence
-      if @window.length < @count
-        data = @window + [@next_element]
-        data.compact
-      else
-        @window
-      end
+      @window[1..-2]
     end
 
     def next
-      if @window.length == @count && @next_element
-        @window.last.id
-      end
+      @window.last.nil? ? nil : @window.last.try(@cursor_key)
     end
 
-    # TODO Add reverse order
     def prev
-      # -@window.first.id if @prev_element
+      @window.first.nil? ? nil : @window.first.try(@cursor_key)
     end
 
     def params_for(dir)
       case dir
       when :first
-        { cursor: first, count: @count }
+        { cursor: cursor, count: @count }
       when :next
         { cursor: self.next, count: @count }
       when :prev
-        { cursor: prev, count: @count }
+        { cursor: self.prev, count: @count }
       end
     end
 
