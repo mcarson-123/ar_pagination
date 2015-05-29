@@ -1,6 +1,6 @@
 # ArPagination
 
-TODO: Write a gem description
+Active Record Pagination is a gem that allows simple pagination for your api's resource endpoint responses.
 
 ## Installation
 
@@ -20,7 +20,62 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Cursor Pagination
+
+The cursor is the value of an attribute you would like to fetch a number of resources before/after.
+
+Add the following to your controller:
+
+Query params:
+
+```
+def query_params
+  validate_range!(:count, 1..100)
+  query_params = params.permit(:cursor, :count, :sort) #sort is like: "+age,-name" to sort first by age ascending and name descending
+  query_params
+end
+```
+
+Include the concern:
+
+```
+class SomeController < ActionController::Base
+include ArPagination::RespondWithPage
+```
+
+Use for the response
+
+```
+def index
+  ...
+  @page = ArPagination::CursorPagination::Query.new(@resource_scope).fetch(query_params)
+
+  respond_with_page @page
+end
+```
+
+### Offset Pagination
+
+The offset specifies the number of resources to fetch the count number of resources after.
+
+Add the query params to your controller:
+
+```
+def query_params
+  validate_range!(:count, 1...100)
+  query_params = params.permit(:count, :offset, :sort)
+  query_params
+end
+```
+
+Use in your endpoint method, similar to:
+
+```
+def index
+  ...
+  respond_with_page @page = OffsetPagination::Page.new(@resource_scope, query_params)
+end
+```
 
 ## Contributing
 
