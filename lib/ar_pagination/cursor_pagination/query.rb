@@ -1,3 +1,5 @@
+require "ar_pagination/helpers/sort"
+
 module ArPagination::CursorPagination
   class Query
 
@@ -17,21 +19,7 @@ module ArPagination::CursorPagination
     def fetch(cursor: -1, count: 50, sort: "")
 
       # 1. sort if required
-      order_hash = {}
-      order_options = sort.split(',') if sort
-      Array.wrap(order_options).each do |order_option|
-        case order_option.first
-        when '-'
-          direction = :desc
-        when '+'
-          direction = :asc
-        else
-          next
-        end
-        sort_attr = order_option[1..-1]
-        order_hash[sort_attr.to_sym] = direction
-      end
-      @scope = @scope.order(order_hash) unless order_hash.empty?
+      @scope = ArPagination::Helpers::Sort.new(@scope).sort(sort)
 
       # 2. only need array of cursor keys from scope
       scope_keyed = @scope.pluck(@cursor_key)

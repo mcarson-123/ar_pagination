@@ -1,7 +1,4 @@
 require "rails_helper"
-require "ar_pagination/offset_pagination/page"
-require "active_support/core_ext/array/wrap"
-require "active_support/core_ext/string"
 
 describe "ArPagination::OffsetPagination::Page" do
   let!(:madeline) { Foo.create(name: 'Madeline', age: 125) }

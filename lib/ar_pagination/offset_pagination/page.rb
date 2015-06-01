@@ -1,3 +1,5 @@
+require "ar_pagination/helpers/sort"
+
 module ArPagination::OffsetPagination
   class Page
 
@@ -9,22 +11,7 @@ module ArPagination::OffsetPagination
     end
 
     def data
-      # sort
-      order_hash = {}
-      order_options = @sort.split(',') if @sort
-      Array.wrap(order_options).each do |order_option|
-        case order_option.first
-        when '-'
-          direction = :desc
-        when '+'
-          direction = :asc
-        else
-          next
-        end
-        sort_attr = order_option[1..-1]
-        order_hash[sort_attr.to_sym] = direction
-      end
-      @scope = @scope.order(order_hash) unless order_hash.empty?
+      @scope = ArPagination::Helpers::Sort.new(@scope).sort(@sort)
 
       @scope.offset(@offset).limit(@limit)
     end

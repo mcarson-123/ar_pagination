@@ -1,6 +1,4 @@
 require "rails_helper"
-require "ar_pagination/cursor_pagination/query"
-require "ar_pagination/cursor_pagination/page"
 
 describe "ArPagination::CursorPagination::Query" do
   let!(:youngin) { Foo.create(name: "youngin'", age: 90) }
